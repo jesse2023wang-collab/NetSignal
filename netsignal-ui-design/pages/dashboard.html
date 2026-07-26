@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html class="light" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetSignal</title>
+
+  <style id="theme-vars">
+    :root {
+      --brand-bg-brand: #4b3fe3;
+      --brand-bg-brand-hover: #6a6fff;
+      --brand-bg-brand-active: #3f31c6;
+      --brand-bg-brand-disabled: rgba(75, 63, 227, 0.22);
+      --brand-bg-brand-popup: rgba(170, 183, 255, 0.36);
+      --brand-bg-base-default: #ffffff;
+      --brand-bg-base-secondary: #f5f5f5;
+      --brand-bg-base-tertiary: #e5e5e5;
+      --brand-bg-overlay-l1: rgba(115, 115, 115, 0.08);
+      --brand-bg-overlay-l2: rgba(115, 115, 115, 0.12);
+      --brand-bg-overlay-l3: rgba(115, 115, 115, 0.16);
+      --brand-bg-overlay-l4: rgba(115, 115, 115, 0.2);
+      --brand-text-default: #171717;
+      --brand-text-secondary: #404040;
+      --brand-text-tertiary: #737373;
+      --brand-text-disabled: #a1a1a1;
+      --brand-text-onbrand: #ffffff;
+      --brand-icon-default: #262626;
+      --brand-icon-secondary: #404040;
+      --brand-icon-tertiary: #737373;
+      --brand-icon-disabled: #a1a1a1;
+      --brand-icon-onbrand: #ffffff;
+      --brand-border-neutral-l1: rgba(115, 115, 115, 0.12);
+      --brand-border-neutral-l2: rgba(115, 115, 115, 0.18);
+      --brand-border-neutral-l3: rgba(115, 115, 115, 0.36);
+      --brand-border-brand: #4b3fe3;
+      --brand-status-primary-default: #2f74ff;
+      --brand-status-success-default: #15a877;
+      --brand-status-success-hover: #2fb287;
+      --brand-status-success-active: #1e8b56;
+      --brand-status-success-surface-l1: rgba(64, 176, 139, 0.12);
+      --brand-status-alert-default: #fea900;
+      --brand-status-alert-hover: #ffb700;
+      --brand-status-alert-active: #e59100;
+      --brand-status-alert-surface-l1: rgba(254, 169, 0, 0.14);
+      --brand-status-error-default: #e8463a;
+      --brand-status-error-hover: #ea574c;
+      --brand-status-error-active: #c9382f;
+      --brand-status-error-surface-l1: rgba(232, 70, 58, 0.12);
+      --brand-brand-grey-100: #f5f5f5;
+      --brand-brand-grey-300: #d4d4d4;
+      --brand-brand-grey-400: #a1a1a1;
+      --brand-brand-grey-500: #737373;
+      --brand-brand-grey-700: #404040;
+      --brand-brand-grey-800: #262626;
+      --brand-brand-grey-900: #171717;
+    }
+  </style>
+
+  <style id="semantic-token-fallback">
+    .bg-primary { background-color: #4b3fe3; }
+    .text-primary { color: #4b3fe3; }
+    .bg-card { background-color: #f5f5f5; }
+    .text-foreground { color: #171717; }
+    .text-muted-foreground { color: #404040; }
+    .bg-surface { background-color: #ffffff; }
+    .border-border { border-color: rgba(115, 115, 115, 0.12); }
+    .bg-success { background-color: #15a877; }
+    .text-success { color: #15a877; }
+    .bg-warning { background-color: #fea900; }
+    .text-warning { color: #fea900; }
+    .bg-error { background-color: #e8463a; }
+    .text-error { color: #e8463a; }
+    .bg-info { background-color: #2f74ff; }
+    .text-info { color: #2f74ff; }
+  </style>
+
+  <style type="text/tailwindcss">
+    @theme inline {
+      --color-primary: #4b3fe3;
+      --color-primary-hover: #6a6fff;
+      --color-foreground: #171717;
+      --color-muted-foreground: #404040;
+      --color-card: #f5f5f5;
+      --color-surface: #ffffff;
+      --color-border: rgba(115, 115, 115, 0.12);
+      --color-success: #15a877;
+      --color-warning: #fea900;
+      --color-error: #e8463a;
+      --color-info: #2f74ff;
+      --color-tertiary: #737373;
+      --color-disabled: #a1a1a1;
+      --color-brand-purple: #4b3fe3;
+      --color-brand-purple-hover: #6a6fff;
+    }
+
+    @layer base {
+      body {
+        font-family: -apple-system, 'SF Pro Text', 'PingFang SC', system-ui, sans-serif;
+        background-color: var(--brand-bg-base-secondary);
+        color: var(--brand-text-default);
+      }
+    }
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@1.7.0"></script>
+
+  <style>
+    [data-icon] {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+      background-color: currentColor;
+    }
+  </style>
+</head>
+
+<body class="flex justify-center pt-10 min-h-screen">
+
+  <!-- macOS Menu Bar Popover Panel -->
+  <main class="w-[340px] rounded-[10px] overflow-hidden" style="background-color: var(--brand-bg-base-default); box-shadow: 0 0 0 0.5px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.10), 0 12px 40px rgba(0,0,0,0.06);">
+
+    <!-- 1. Header -->
+    <header class="flex items-center justify-between px-3.5 h-11 shrink-0" style="border-bottom: 0.5px solid var(--brand-border-neutral-l1);">
+      <div class="flex items-center gap-1.5">
+        <!-- Signal bars icon: 16px, 4 ascending bars, 3 lit dark grey -->
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0">
+          <rect x="1" y="12" width="2.5" height="4" rx="0.75" fill="var(--brand-brand-grey-800)"/>
+          <rect x="4.5" y="9" width="2.5" height="7" rx="0.75" fill="var(--brand-brand-grey-800)"/>
+          <rect x="8" y="6" width="2.5" height="10" rx="0.75" fill="var(--brand-brand-grey-800)"/>
+          <rect x="11.5" y="3" width="2.5" height="13" rx="0.75" fill="var(--brand-text-disabled)"/>
+        </svg>
+        <span class="text-[13px] font-semibold tracking-tight whitespace-nowrap" style="color: var(--brand-text-default);">NetSignal</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <!-- Gear icon button -->
+        <button class="flex items-center justify-center w-7 h-7 rounded-[4px] shrink-0 hover:bg-[rgba(0,0,0,0.05)] focus-visible:outline-2 focus-visible:outline-offset-2" style="color: var(--brand-icon-tertiary);" data-dom-id="nav-settings" aria-label="设置">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+        <!-- Environment toggle pills (macOS segmented control style) -->
+        <div class="flex items-center rounded-[4px] p-[3px]" style="background-color: var(--brand-bg-base-tertiary);">
+          <button class="env-btn flex-1 px-2 py-[2px] text-[11px] font-medium rounded-[3px] whitespace-nowrap text-center" data-dom-id="env-domestic" data-active="false">仅国内</button>
+          <button class="env-btn flex-1 px-2 py-[2px] text-[11px] font-medium rounded-[3px] whitespace-nowrap text-center" data-dom-id="env-global" data-active="true" style="background-color: var(--brand-bg-base-default); color: var(--brand-text-default); box-shadow: 0 0.5px 1.5px rgba(0,0,0,0.06);">全球</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. Signal Quality Summary -->
+    <div class="flex items-center justify-between px-3.5 py-2.5" style="border-bottom: 0.5px solid var(--brand-border-neutral-l1);">
+      <div class="flex items-center gap-2">
+        <!-- Compact signal icon: 4 bars, 3 lit green -->
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" class="shrink-0">
+          <rect x="1" y="15" width="3" height="5" rx="1" fill="var(--brand-status-success-default)"/>
+          <rect x="6" y="11" width="3" height="9" rx="1" fill="var(--brand-status-success-default)"/>
+          <rect x="11" y="7" width="3" height="13" rx="1" fill="var(--brand-status-success-default)"/>
+          <rect x="16" y="3" width="3" height="17" rx="1" fill="var(--brand-brand-grey-300)"/>
+        </svg>
+        <span class="text-[12px] font-semibold whitespace-nowrap" style="color: var(--brand-text-default);">网络良好</span>
+      </div>
+      <span class="text-[11px] tabular-nums whitespace-nowrap" style="color: var(--brand-text-secondary);">平均 312ms</span>
+    </div>
+
+    <!-- 3. Countdown Row -->
+    <div class="flex items-center justify-between px-3.5 py-1.5">
+      <span id="countdown" class="text-[11px] whitespace-nowrap" style="color: var(--brand-text-tertiary);">12秒后刷新</span>
+      <button id="refresh-btn" class="inline-flex items-center justify-center px-2.5 py-[3px] rounded-[4px] text-[11px] font-medium whitespace-nowrap transition-all duration-150" style="color: var(--brand-text-secondary); background-color: var(--brand-bg-base-tertiary);"
+        onmouseover="this.style.backgroundColor='var(--brand-bg-base-secondary)'"
+        onmouseout="if(!this.classList.contains('refreshing'))this.style.backgroundColor='var(--brand-bg-base-tertiary)'"
+        onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='1px'"
+        onblur="this.style.outline='none'"
+        onclick="doRefresh()">立即刷新</button>
+    </div>
+
+    <!-- 4. Section: 国内网站 -->
+    <section class="px-3.5 pt-1">
+      <h3 class="text-[11px] font-semibold whitespace-nowrap pb-1.5" style="color: var(--brand-text-tertiary);">国内网站</h3>
+
+      <!-- 微博 224ms -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">微博</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">224ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 36px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+
+      <!-- 小红书 280ms -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">小红书</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">280ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 30px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+
+      <!-- 京东 111ms -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">京东</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">111ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 48px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+
+      <!-- 淘宝 30ms -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">淘宝</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">30ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 56px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+
+      <!-- B站 141ms -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">B站</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">141ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 42px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+
+      <!-- 网易 44ms -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">网易</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">44ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 54px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Section: 海外网站 -->
+    <section id="overseas-section" class="px-3.5 pt-3">
+      <h3 class="text-[11px] font-semibold whitespace-nowrap pb-1.5" style="color: var(--brand-text-tertiary);">海外网站</h3>
+
+      <!-- X 1037ms - orange -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">X</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">1037ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 10px; height: 2px; background-color: var(--brand-status-alert-default);"></div>
+        </div>
+      </div>
+
+      <!-- YouTube 230ms - green -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">YouTube</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">230ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 35px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+
+      <!-- Google 973ms - orange -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">Google</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">973ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 11px; height: 2px; background-color: var(--brand-status-alert-default);"></div>
+        </div>
+      </div>
+
+      <!-- Netflix 2451ms - red -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">Netflix</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">2451ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 4px; height: 2px; background-color: var(--brand-status-error-default);"></div>
+        </div>
+      </div>
+
+      <!-- GitHub 410ms - green -->
+      <div class="site-row flex items-center gap-2 py-[5px]">
+        <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">GitHub</span>
+        <span class="text-[11px] tabular-nums shrink-0 w-12 text-right whitespace-nowrap" style="color: var(--brand-text-secondary);">410ms</span>
+        <div class="shrink-0 w-14 flex justify-end">
+          <div class="rounded-full" style="width: 22px; height: 2px; background-color: var(--brand-status-success-default);"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Footer Legend -->
+    <footer class="flex items-center justify-center gap-4 px-3.5 pt-3 pb-3" style="border-top: 0.5px solid var(--brand-border-neutral-l1);">
+      <div class="flex items-center gap-1">
+        <span class="w-[6px] h-[6px] rounded-full shrink-0" style="background-color: var(--brand-status-success-default);"></span>
+        <span class="text-[10px] whitespace-nowrap" style="color: var(--brand-text-tertiary);">&lt;500ms</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="w-[6px] h-[6px] rounded-full shrink-0" style="background-color: var(--brand-status-alert-default);"></span>
+        <span class="text-[10px] whitespace-nowrap" style="color: var(--brand-text-tertiary);">500-1500ms</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="w-[6px] h-[6px] rounded-full shrink-0" style="background-color: var(--brand-status-error-default);"></span>
+        <span class="text-[10px] whitespace-nowrap" style="color: var(--brand-text-tertiary);">&gt;1500ms</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <style>
+    .site-row {
+      transition: background-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: 4px;
+      margin: 0 -4px;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+    .site-row:hover {
+      background-color: var(--brand-bg-overlay-l1);
+    }
+  </style>
+
+  <script>
+    lucide.createIcons();
+
+    (function() {
+      const domesticBtn = document.querySelector('[data-dom-id="env-domestic"]');
+      const globalBtn = document.querySelector('[data-dom-id="env-global"]');
+      const overseasSection = document.getElementById('overseas-section');
+      const activeStyle = 'background-color: var(--brand-bg-base-default); color: var(--brand-text-default); box-shadow: 0 0.5px 1.5px rgba(0,0,0,0.06);';
+      const inactiveStyle = 'color: var(--brand-text-tertiary);';
+
+      function activate(btn) {
+        [domesticBtn, globalBtn].forEach(b => {
+          b.removeAttribute('style');
+          b.dataset.active = 'false';
+        });
+        btn.setAttribute('style', activeStyle);
+        btn.dataset.active = 'true';
+      }
+
+      domesticBtn.addEventListener('click', function() {
+        activate(this);
+        overseasSection.style.display = 'none';
+      });
+
+      globalBtn.addEventListener('click', function() {
+        activate(this);
+        overseasSection.style.display = '';
+      });
+
+      // Refresh button
+      var refreshBtn = document.getElementById('refresh-btn');
+      var countdownEl = document.getElementById('countdown');
+      var countdown = 12;
+
+      window.doRefresh = function() {
+        refreshBtn.classList.add('refreshing');
+        refreshBtn.textContent = '刷新中...';
+        refreshBtn.style.opacity = '0.5';
+        refreshBtn.style.pointerEvents = 'none';
+        countdown = 60;
+        countdownEl.textContent = '60秒后刷新';
+        setTimeout(function() {
+          refreshBtn.classList.remove('refreshing');
+          refreshBtn.textContent = '立即刷新';
+          refreshBtn.style.opacity = '1';
+          refreshBtn.style.pointerEvents = '';
+          countdown = 60;
+        }, 1500);
+      };
+
+      // Countdown timer
+      var timer = setInterval(function() {
+        countdown--;
+        if (countdown < 0) countdown = 60;
+        countdownEl.textContent = countdown + '秒后刷新';
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>

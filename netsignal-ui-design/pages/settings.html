@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html class="light" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetSignal 设置</title>
+  <style id="theme-vars">
+:root {
+  --brand-bg-brand: #4b3fe3;
+  --brand-bg-brand-hover: #6a6fff;
+  --brand-bg-brand-active: #3f31c6;
+  --brand-bg-brand-disabled: rgba(75,63,227,0.22);
+  --brand-bg-base-default: #ffffff;
+  --brand-bg-base-secondary: #f5f5f5;
+  --brand-bg-base-tertiary: #e5e5e5;
+  --brand-bg-overlay-l1: rgba(115,115,115,0.08);
+  --brand-text-default: #171717;
+  --brand-text-secondary: #404040;
+  --brand-text-tertiary: #737373;
+  --brand-text-disabled: #a1a1a1;
+  --brand-border-neutral-l1: rgba(115,115,115,0.12);
+  --brand-border-neutral-l2: rgba(115,115,115,0.18);
+  --brand-border-neutral-l3: rgba(115,115,115,0.36);
+  --brand-status-success-default: #15a877;
+  --brand-status-error-default: #e8463a;
+  --brand-icon-default: #262626;
+  --brand-icon-onbrand: #ffffff;
+  --brand-text-onbrand: #ffffff;
+  --brand-brand-grey-100: #f5f5f5;
+  --brand-brand-grey-300: #d4d4d4;
+  --brand-brand-grey-800: #262626;
+  --brand-brand-grey-900: #171717;
+  --brand-brand-grey-950: #0a0a0a;
+}
+  </style>
+  <style id="semantic-token-fallback">
+    .bg-primary { background-color: var(--brand-bg-brand); }
+    .text-foreground { color: var(--brand-text-default); }
+    .bg-card { background-color: var(--brand-bg-base-secondary); }
+    .border-border { border-color: var(--brand-border-neutral-l1); }
+  </style>
+  <style type="text/tailwindcss">
+    @theme inline {
+      --color-primary: var(--brand-bg-brand);
+      --color-foreground: var(--brand-text-default);
+      --color-card: var(--brand-bg-base-secondary);
+      --color-border: var(--brand-border-neutral-l1);
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com?plugins=@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @layer base {
+      body {
+        font-family: -apple-system, "SF Pro Text", "PingFang SC", system-ui, sans-serif;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center" style="background-color: var(--brand-bg-overlay-l1);">
+
+  <!-- macOS Popover Shell -->
+  <div class="w-[340px] rounded-[10px] overflow-hidden" style="background-color: var(--brand-bg-base-default); box-shadow: 0 8px 32px -4px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);">
+
+    <!-- Header -->
+    <div class="flex items-center px-4 shrink-0" style="height: 44px;">
+      <button data-dom-id="back-dashboard" class="inline-flex items-center justify-center w-7 h-7 rounded-md transition-colors duration-150" style="color: var(--brand-icon-default);" onmouseover="this.style.backgroundColor='var(--brand-bg-overlay-l1)'" onmouseout="this.style.backgroundColor='transparent'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="返回">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+      </button>
+      <h1 class="ml-1 text-[13px] font-semibold" style="color: var(--brand-text-default);">设置</h1>
+    </div>
+
+    <!-- Body -->
+    <div class="flex flex-col px-4 pb-4 gap-3">
+
+      <!-- Section: 通用设置 -->
+      <section class="rounded-md p-3 flex flex-col gap-2" style="background-color: var(--brand-bg-base-secondary);">
+        <h2 class="text-[11px] font-semibold uppercase" style="color: var(--brand-text-tertiary); letter-spacing: 0.04em;">通用设置</h2>
+
+        <!-- Toggle: 开机自动启动 (OFF) -->
+        <div class="flex items-center justify-between" style="height: 28px;">
+          <span class="text-[12px]" style="color: var(--brand-text-default);">开机自动启动</span>
+          <div class="relative w-[38px] h-[22px] rounded-full cursor-pointer" style="background-color: var(--brand-brand-grey-300);">
+            <div class="absolute top-[2px] left-[2px] w-[18px] h-[18px] rounded-full" style="background-color: var(--brand-bg-base-default); box-shadow: 0 1px 2px rgba(0,0,0,0.1);"></div>
+          </div>
+        </div>
+
+        <!-- Toggle: 自动刷新 (ON) -->
+        <div class="flex items-center justify-between" style="height: 28px;">
+          <span class="text-[12px]" style="color: var(--brand-text-default);">自动刷新</span>
+          <div class="relative w-[38px] h-[22px] rounded-full cursor-pointer" style="background-color: var(--brand-bg-brand);">
+            <div class="absolute top-[2px] right-[2px] w-[18px] h-[18px] rounded-full" style="background-color: var(--brand-bg-base-default); box-shadow: 0 1px 3px rgba(0,0,0,0.12);"></div>
+          </div>
+        </div>
+
+        <!-- Slider: 刷新间隔 -->
+        <div class="flex items-center gap-2" style="height: 28px;">
+          <span class="text-[12px]" style="color: var(--brand-text-default);">刷新间隔</span>
+          <span class="ml-auto text-[12px] font-medium tabular-nums" style="color: var(--brand-text-secondary);">60秒</span>
+        </div>
+        <input type="range" min="10" max="300" value="60" class="w-full h-[4px] appearance-none rounded-full cursor-pointer" style="background: linear-gradient(to right, var(--brand-bg-brand) 0%, var(--brand-bg-brand) 17.2%, var(--brand-brand-grey-300) 17.2%, var(--brand-brand-grey-300) 100%);">
+      </section>
+
+      <!-- Section: 检测网址 -->
+      <section class="rounded-md flex flex-col overflow-hidden" style="background-color: var(--brand-bg-base-secondary);">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-3" style="height: 36px;">
+          <h2 class="text-[11px] font-semibold uppercase" style="color: var(--brand-text-tertiary); letter-spacing: 0.04em;">检测网址</h2>
+          <button class="text-[12px] font-medium whitespace-nowrap transition-colors duration-150" style="color: var(--brand-text-default); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--brand-border-neutral-l3);" onmouseover="this.style.color='var(--brand-text-secondary)'" onmouseout="this.style.color='var(--brand-text-default)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'">添加网站</button>
+        </div>
+
+        <!-- Divider -->
+        <div style="border-top: 1px solid var(--brand-border-neutral-l1);"></div>
+
+        <!-- Website list -->
+        <div class="flex flex-col">
+          <!-- Row: 微博 (国内) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-default);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">微博</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-bg-overlay-l1); color: var(--brand-text-secondary);">国内</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除微博">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: 小红书 (国内) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-secondary);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">小红书</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-bg-overlay-l1); color: var(--brand-text-secondary);">国内</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除小红书">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: 京东 (国内) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-default);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">京东</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-bg-overlay-l1); color: var(--brand-text-secondary);">国内</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除京东">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: 淘宝 (国内) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-secondary);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">淘宝</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-bg-overlay-l1); color: var(--brand-text-secondary);">国内</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除淘宝">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: B站 (国内) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-default);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">B站</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-bg-overlay-l1); color: var(--brand-text-secondary);">国内</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除B站">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: 网易 (国内) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-secondary);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">网易</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-bg-overlay-l1); color: var(--brand-text-secondary);">国内</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除网易">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: X (海外) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-default);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">X</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-brand-grey-900); color: var(--brand-bg-base-default);">海外</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除X">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: YouTube (海外) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-secondary);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">YouTube</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-brand-grey-900); color: var(--brand-bg-base-default);">海外</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除YouTube">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: Google (海外) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-default);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">Google</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-brand-grey-900); color: var(--brand-bg-base-default);">海外</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除Google">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: Netflix (海外) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-secondary);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">Netflix</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-brand-grey-900); color: var(--brand-bg-base-default);">海外</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除Netflix">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Row: GitHub (海外) -->
+          <div class="flex items-center px-3" style="height: 28px; background-color: var(--brand-bg-base-default);">
+            <span class="flex-1 min-w-0 truncate text-[12px]" style="color: var(--brand-text-default);">GitHub</span>
+            <span class="inline-flex items-center justify-center px-1.5 rounded text-[10px] font-medium whitespace-nowrap" style="height: 18px; background-color: var(--brand-brand-grey-900); color: var(--brand-bg-base-default);">海外</span>
+            <button class="ml-2 inline-flex items-center justify-center transition-colors duration-150" style="width: 18px; height: 18px; color: var(--brand-text-tertiary);" onmouseover="this.style.color='var(--brand-status-error-default)'" onmouseout="this.style.color='var(--brand-text-tertiary)'" onfocus="this.style.outline='2px solid var(--brand-bg-brand)';this.style.outlineOffset='2px'" onblur="this.style.outline='none'" aria-label="删除GitHub">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Slider thumb styles (must be in body per CSS-Ownership rules) -->
+  <style>
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--brand-bg-base-default);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.16);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--brand-bg-base-default);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.16);
+      border: none;
+      cursor: pointer;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; }
+    }
+  </style>
+
+</body>
+</html>

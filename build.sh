@@ -4,7 +4,7 @@ set -e
 echo "Building NetSignal..."
 swift build --disable-sandbox -c release
 
-VERSION="1.0.1"
+VERSION="1.0.2"
 STAGING=$(mktemp -d)
 
 echo "Creating app bundle..."
@@ -63,12 +63,16 @@ mkdir -p "NetSignal.app/Contents/Resources"
 cp Resources/AppIcon.icns "NetSignal.app/Contents/Resources/"
 cp Resources/AppIcon.png "NetSignal.app/Contents/Resources/"
 
+# 代码签名（ad-hoc，避免 Gatekeeper 报"文件已损坏"）
+echo "Signing app bundle..."
+codesign --force --deep --sign - "NetSignal.app" || echo "Warning: codesign failed, app may show 'damaged' on other Macs"
+
 # Copy complete app to staging for DMG
 cp -R NetSignal.app "$STAGING/"
 ln -s /Applications "$STAGING/Applications"
 
-echo "Creating DMG: NetSignal.dmg..."
-hdiutil create -volname "NetSignal" -srcfolder "$STAGING" -ov -format UDZO "NetSignal.dmg"
+echo "Creating DMG: NetSignal-${VERSION}.dmg..."
+hdiutil create -volname "NetSignal ${VERSION}" -srcfolder "$STAGING" -ov -format UDZO "NetSignal-${VERSION}.dmg"
 rm -rf "$STAGING"
 
 # Clean up intermediate artifacts
@@ -76,4 +80,4 @@ rm -rf NetSignal.app
 
 echo "Build complete!"
 echo ""
-echo "DMG available at: $(pwd)/NetSignal.dmg"
+echo "DMG available at: $(pwd)/NetSignal-${VERSION}.dmg"

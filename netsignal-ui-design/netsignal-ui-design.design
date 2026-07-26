@@ -1,0 +1,65 @@
+{
+  "data": [
+    {
+      "id": "page-dashboard",
+      "title": "监控面板",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1753190400000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/dashboard.html",
+        "interactions": [
+          {
+            "domId": "nav-settings",
+            "targetPageId": "page-settings",
+            "hideEdge": true,
+            "transitionLabel": "打开设置"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-settings",
+      "title": "设置页面",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1753190400000,
+      "canvasData": {
+        "x": 0,
+        "y": 312,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/settings.html",
+        "interactions": [
+          {
+            "domId": "back-dashboard",
+            "targetPageId": "page-dashboard",
+            "hideEdge": true,
+            "transitionLabel": "返回面板"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": false,
+    "deviceType": "desktop",
+    "projectName": "NetSignal UI 设计",
+    "designLibrary": {
+      "name": "TRAE Work",
+      "id": "R_45RI.5VBQ1A0",
+      "version": "1",
+      "scope": "built-in-global",
+      "path": "/Users/jesse./.trae-cn/design_libraries/R_45RI.5VBQ1A0",
+      "versionSource": "metadata.json"
+    },
+    "visualEditorEnabled": true,
+    "showEdge": false
+  }
+}

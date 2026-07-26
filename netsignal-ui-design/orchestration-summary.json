@@ -1,0 +1,131 @@
+{
+  "skillProvenance": {
+    "name": "solo-design",
+    "version": "2026.07.06.8",
+    "version_source": "skill-version.json",
+    "runtime_skill_dir": "/Users/jesse./.trae-cn/builtin/design/default/skills/solo-design",
+    "recorded_at": "2026-07-22T12:00:00.000Z"
+  },
+  "project": {
+    "name": "NetSignal UI 设计",
+    "path": "/Users/jesse./Documents/Trae/NetSignal/netsignal-ui-design",
+    "operation": "create",
+    "deviceType": "desktop",
+    "language": "zh-CN",
+    "dashboardMode": true,
+    "intentProfile": {
+      "caseFamily": "library_bound",
+      "graphicStrategy": null,
+      "sourceType": null,
+      "routingReason": "Active Design Library TRAE Work referenced; new project for macOS menu bar app UI redesign"
+    },
+    "replicationMode": null,
+    "sourceUrl": null,
+    "designRead": "macOS utility dashboard / power users / calm tech monitor / medium density / avoid heavy glassmorphism",
+    "designDials": {
+      "layoutVariance": 2,
+      "motionIntensity": 2,
+      "visualDensity": 3
+    }
+  },
+  "designSource": {
+    "operatingMode": "library-bound",
+    "libraryIdentity": {
+      "name": "TRAE Work",
+      "id": "R_45RI.5VBQ1A0",
+      "version": "1",
+      "scope": "built-in-global",
+      "path": "/Users/jesse./.trae-cn/design_libraries/R_45RI.5VBQ1A0",
+      "versionSource": "metadata.json"
+    },
+    "libraryPath": "/Users/jesse./.trae-cn/design_libraries/R_45RI.5VBQ1A0",
+    "cssFilePath": "/Users/jesse./.trae-cn/design_libraries/R_45RI.5VBQ1A0/css/colors_and_type.css",
+    "brandPrefix": "brand",
+    "themeMode": "light",
+    "designDecisionSummary": "Enterprise utility dashboard using TRAE Work tokens: #4b3fe3 primary, status-success #15a877, status-error #e8463a, status-alert #fea900, system greys, SF Pro + PingFang SC font stack, radius-8 max, border-neutral tokens for dividers",
+    "actualTokenNameReference": [
+      { "semanticPurpose": "Primary background", "tokenName": "brand-bg-brand" },
+      { "semanticPurpose": "Primary text", "tokenName": "brand-text-default" },
+      { "semanticPurpose": "Secondary text", "tokenName": "brand-text-secondary" },
+      { "semanticPurpose": "Tertiary text", "tokenName": "brand-text-tertiary" },
+      { "semanticPurpose": "Card/surface background", "tokenName": "brand-bg-base-secondary" },
+      { "semanticPurpose": "Divider/border", "tokenName": "brand-border-neutral-l1" },
+      { "semanticPurpose": "Success status", "tokenName": "brand-status-success-default" },
+      { "semanticPurpose": "Error status", "tokenName": "brand-status-error-default" },
+      { "semanticPurpose": "Warning status", "tokenName": "brand-status-alert-default" },
+      { "semanticPurpose": "Primary brand hover", "tokenName": "brand-bg-brand-hover" },
+      { "semanticPurpose": "Icon default", "tokenName": "brand-icon-default" },
+      { "semanticPurpose": "Disabled text", "tokenName": "brand-text-disabled" },
+      { "semanticPurpose": "Base background", "tokenName": "brand-bg-base-default" },
+      { "semanticPurpose": "Brand grey-100 surface", "tokenName": "brand-brand-grey-100" },
+      { "semanticPurpose": "Info/primary status", "tokenName": "brand-status-primary-default" }
+    ],
+    "componentContractKind": null,
+    "forbiddenInventedComponents": [],
+    "allowedComponents": [],
+    "styleConstraints": {
+      "radiusMax": 24,
+      "spacingBase": 1,
+      "fontSizeBody": 14,
+      "fontSizeMin": 10,
+      "controlHeightDefault": 32,
+      "controlHeightLarge": 38
+    }
+  },
+  "pages": [
+    {
+      "nodeId": "page-dashboard",
+      "slug": "dashboard",
+      "title": "监控面板",
+      "htmlSrc": "pages/dashboard.html",
+      "pageIndex": 1,
+      "viewportMode": "app-shell",
+      "businessScenario": "Main network monitoring dashboard showing signal quality, per-site latency with color coding, domestic/overseas categories, and quick actions",
+      "visualNorthStar": "A calm, data-dense monitoring panel with signal-strength hero metric, color-coded latency bars, and clear domestic/overseas grouping — feels like a professional network operations center",
+      "compositionPattern": "app-shell dashboard with fixed sidebar + scrollable content area",
+      "continuityAnchors": ["brand color #4b3fe3", "signal-strength visual motif", "status color coding system"],
+      "componentPlan": [],
+      "imagePlan": [],
+      "chartsRequired": false,
+      "qualityRisks": ["dense data layout", "CJK text alignment in table rows"],
+      "pageType": "task-driven",
+      "dashboardMode": true
+    },
+    {
+      "nodeId": "page-settings",
+      "slug": "settings",
+      "title": "设置页面",
+      "htmlSrc": "pages/settings.html",
+      "pageIndex": 2,
+      "viewportMode": "app-shell",
+      "businessScenario": "Settings panel with general settings (auto-launch, auto-refresh, interval slider) and website management table with add/delete/enable/disable",
+      "visualNorthStar": "Clean two-section settings panel with smooth controls and a professional data table — feels native macOS but with a modern web aesthetic",
+      "compositionPattern": "app-shell settings form with sectioned groups",
+      "continuityAnchors": ["brand color #4b3fe3", "status color coding", "table row styling"],
+      "componentPlan": [],
+      "imagePlan": [],
+      "chartsRequired": false,
+      "qualityRisks": ["table row density", "CJK form label alignment"],
+      "pageType": "task-driven",
+      "dashboardMode": true
+    }
+  ],
+  "assets": [],
+  "wiringPlan": [],
+  "hiddenInteractionPlan": [
+    {
+      "sourceNodeId": "page-dashboard",
+      "domId": "nav-settings",
+      "targetPageId": "page-settings",
+      "hideEdge": true,
+      "reason": "settings navigation"
+    },
+    {
+      "sourceNodeId": "page-settings",
+      "domId": "back-dashboard",
+      "targetPageId": "page-dashboard",
+      "hideEdge": true,
+      "reason": "back navigation"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import Cocoa
 class UpdateChecker {
     static let shared = UpdateChecker()
 
-    private let currentVersion = "1.0.1"
+    private let currentVersion = "1.0.2"
     private let checkURL = "https://api.github.com/repos/jesse2023wang-ai/NetSignal/releases/latest"
 
     func checkForUpdate() {
