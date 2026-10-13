@@ -1,6 +1,8 @@
 import Cocoa
 
 class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
+    private static let environmentOptions: [EnvironmentMode] = [.auto, .global, .domesticOnly]
+
     private var statusItem: NSStatusItem
     private var timer: Timer?
     private var countdownTimer: Timer?
@@ -8,14 +10,18 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
     private var currentQuality: NetworkQuality = .noSignal
     private var isRefreshing = false
     private var lastTestTime: Date = .distantPast
+    /// 当前菜单里实际展示的环境（自动模式下由探测结果决定）
+    private var displayedEnvironment: EnvironmentMode = .global
+    /// 海外站点相关的菜单项，自动模式下按需显隐
+    private var overseasItems: [NSMenuItem] = []
+    private weak var envMenuItem: NSMenuItem?
 
     override init() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         super.init()
 
         if let button = statusItem.button {
-            let prefs = Preferences.shared
-            button.image = SignalIcon.generateImage(quality: .noSignal, colorful: prefs.useColorfulIcon)
+            button.image = SignalIcon.generateImage(quality: .noSignal)
             button.imagePosition = .imageOnly
             button.toolTip = "NetSignal"
             button.target = self
@@ -28,12 +34,6 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(iconStyleDidChange),
-            name: .iconStyleChanged,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(websitesDidChange),
             name: .websitesDidChange,
             object: nil
@@ -44,11 +44,6 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
             name: .autoRefreshChanged,
             object: nil
         )
-    }
-
-    @objc private func iconStyleDidChange() {
-        let prefs = Preferences.shared
-        statusItem.button?.image = SignalIcon.generateImage(quality: currentQuality, colorful: prefs.useColorfulIcon)
     }
 
     @objc private func websitesDidChange() {
@@ -79,8 +74,11 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
         menu.delegate = self
         let prefs = Preferences.shared
 
+        displayedEnvironment = resolvedEnvironment()
+        overseasItems = []
+
         // 状态标题
-        let titleItem = NSMenuItem(title: "NetSignal - 网络状态监测", action: nil, keyEquivalent: "")
+        let titleItem = NSMenuItem(title: "NetSignal - 真实的网络状态", action: nil, keyEquivalent: "")
         titleItem.isEnabled = false
         menu.addItem(titleItem)
         menu.addItem(NSMenuItem.separator())
@@ -104,19 +102,26 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
             menu.addItem(item)
         }
 
-        // 海外网站（仅在全局模式下显示）
-        if prefs.environmentMode == .global {
-            menu.addItem(NSMenuItem.separator())
+        // 海外网站（全球模式显示；自动模式下先建好，再按探测结果显隐）
+        if prefs.environmentMode == .auto || displayedEnvironment == .global {
+            let separator = NSMenuItem.separator()
+            menu.addItem(separator)
+            overseasItems.append(separator)
+
             let overseasTitle = NSMenuItem(title: "  海外网站", action: nil, keyEquivalent: "")
             overseasTitle.isEnabled = false
             menu.addItem(overseasTitle)
+            overseasItems.append(overseasTitle)
 
             for website in prefs.websites.filter({ !$0.isDomestic && $0.isEnabled }) {
                 let item = NSMenuItem(title: "    \(website.name): 等待检测...", action: nil, keyEquivalent: "")
                 item.isEnabled = false
                 item.tag = website.id.hashValue
                 menu.addItem(item)
+                overseasItems.append(item)
             }
+
+            updateOverseasVisibility()
         }
 
         menu.addItem(NSMenuItem.separator())
@@ -135,44 +140,22 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
 
         // 环境切换子菜单
         let envMenu = NSMenu()
-        let domesticItem = NSMenuItem(title: "仅国内", action: #selector(setDomesticMode), keyEquivalent: "")
-        domesticItem.target = self
-        domesticItem.state = prefs.environmentMode == .domesticOnly ? .on : .off
-        envMenu.addItem(domesticItem)
-
-        let globalItem = NSMenuItem(title: "全球", action: #selector(setGlobalMode), keyEquivalent: "")
-        globalItem.target = self
-        globalItem.state = prefs.environmentMode == .global ? .on : .off
-        envMenu.addItem(globalItem)
+        for (index, mode) in Self.environmentOptions.enumerated() {
+            let item = NSMenuItem(title: mode.description, action: #selector(setEnvironmentMode(_:)), keyEquivalent: "")
+            item.target = self
+            item.tag = index
+            item.state = prefs.environmentMode == mode ? .on : .off
+            envMenu.addItem(item)
+        }
 
         // 环境切换 — 状态文字灰色且靠近 ▸
-        let envMode = prefs.environmentMode == .global ? "全球" : "仅国内"
         let envAttr = NSMutableAttributedString(string: "环境切换")
-        envAttr.append(NSAttributedString(string: "  \(envMode)", attributes: [.foregroundColor: NSColor.secondaryLabelColor]))
+        envAttr.append(NSAttributedString(string: "  \(environmentStatusText())", attributes: [.foregroundColor: NSColor.secondaryLabelColor]))
         let envItem = NSMenuItem()
         envItem.attributedTitle = envAttr
         envItem.submenu = envMenu
         menu.addItem(envItem)
-
-        // 彩色图标子菜单
-        let colorMenu = NSMenu()
-        let colorOn = NSMenuItem(title: "开启", action: #selector(setColorfulOn), keyEquivalent: "")
-        colorOn.target = self
-        colorOn.state = prefs.useColorfulIcon ? .on : .off
-        colorMenu.addItem(colorOn)
-
-        let colorOff = NSMenuItem(title: "关闭", action: #selector(setColorfulOff), keyEquivalent: "")
-        colorOff.target = self
-        colorOff.state = prefs.useColorfulIcon ? .off : .on
-        colorMenu.addItem(colorOff)
-
-        let colorStatus = prefs.useColorfulIcon ? "开启" : "关闭"
-        let colorAttr = NSMutableAttributedString(string: "彩色图标")
-        colorAttr.append(NSAttributedString(string: "  \(colorStatus)", attributes: [.foregroundColor: NSColor.secondaryLabelColor]))
-        let colorfulItem = NSMenuItem()
-        colorfulItem.attributedTitle = colorAttr
-        colorfulItem.submenu = colorMenu
-        menu.addItem(colorfulItem)
+        envMenuItem = envItem
 
         menu.addItem(NSMenuItem.separator())
 
@@ -202,8 +185,40 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
         menu.delegate = self
     }
 
+    private func resolvedEnvironment() -> EnvironmentMode {
+        let mode = Preferences.shared.environmentMode
+        return mode == .auto ? (NetworkMonitor.shared.effectiveMode ?? .global) : mode
+    }
+
+    private func environmentStatusText() -> String {
+        let mode = Preferences.shared.environmentMode
+        guard mode == .auto, let detected = NetworkMonitor.shared.effectiveMode else {
+            return mode.description
+        }
+        return "自动·\(detected.description)"
+    }
+
+    private func updateOverseasVisibility() {
+        let hidden = displayedEnvironment != .global
+        for item in overseasItems {
+            item.isHidden = hidden
+        }
+    }
+
     private func updateMenuItems() {
         guard let menu = statusItem.menu else { return }
+
+        let newEnvironment = resolvedEnvironment()
+        if newEnvironment != displayedEnvironment {
+            displayedEnvironment = newEnvironment
+            updateOverseasVisibility()
+        }
+
+        if let envItem = envMenuItem {
+            let attr = NSMutableAttributedString(string: "环境切换")
+            attr.append(NSAttributedString(string: "  \(environmentStatusText())", attributes: [.foregroundColor: NSColor.secondaryLabelColor]))
+            envItem.attributedTitle = attr
+        }
 
         if let qualityItem = menu.item(withTag: 100) {
             let qualityText = isRefreshing ? "检测中..." : currentQuality.description
@@ -238,9 +253,12 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
         guard Preferences.shared.autoRefresh else { return }
         let interval = Preferences.shared.refreshInterval
         lastTestTime = Date()
-        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
+        let refreshTimer = Timer(timeInterval: interval, repeats: true) { _ in
             NetworkMonitor.shared.testAllWebsites()
         }
+        // 菜单打开时 RunLoop 跑在 eventTracking 模式，.default 模式的定时器不会触发
+        RunLoop.main.add(refreshTimer, forMode: .common)
+        timer = refreshTimer
         NetworkMonitor.shared.testAllWebsites()
     }
 
@@ -251,8 +269,7 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
         lastTestTime = Date()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let prefs = Preferences.shared
-            self.statusItem.button?.image = SignalIcon.generateImage(quality: .noSignal, colorful: prefs.useColorfulIcon)
+            // 检测期间保持图标不变，不重置为 noSignal
             self.updateMenuItems()
         }
     }
@@ -264,8 +281,7 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
 
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let prefs = Preferences.shared
-            self.statusItem.button?.image = SignalIcon.generateImage(quality: quality, colorful: prefs.useColorfulIcon)
+            self.statusItem.button?.image = SignalIcon.generateImage(quality: quality)
             self.updateMenuItems()
         }
     }
@@ -277,30 +293,16 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
         NetworkMonitor.shared.testAllWebsites()
     }
 
-    @objc private func setDomesticMode() {
-        Preferences.shared.environmentMode = .domesticOnly
+    @objc private func setEnvironmentMode(_ sender: NSMenuItem) {
+        let options = Self.environmentOptions
+        guard sender.tag >= 0, sender.tag < options.count else { return }
+        let mode = options[sender.tag]
+        guard Preferences.shared.environmentMode != mode else { return }
+
+        Preferences.shared.environmentMode = mode
         rebuildMenu()
         lastTestTime = Date()
         NetworkMonitor.shared.testAllWebsites()
-    }
-
-    @objc private func setGlobalMode() {
-        Preferences.shared.environmentMode = .global
-        rebuildMenu()
-        lastTestTime = Date()
-        NetworkMonitor.shared.testAllWebsites()
-    }
-
-    @objc private func setColorfulOn() {
-        Preferences.shared.useColorfulIcon = true
-        rebuildMenu()
-        self.statusItem.button?.image = SignalIcon.generateImage(quality: currentQuality, colorful: true)
-    }
-
-    @objc private func setColorfulOff() {
-        Preferences.shared.useColorfulIcon = false
-        rebuildMenu()
-        self.statusItem.button?.image = SignalIcon.generateImage(quality: currentQuality, colorful: false)
     }
 
     private func rebuildMenu() {
@@ -315,7 +317,7 @@ class StatusBarController: NSObject, NetworkMonitorDelegate, NSMenuDelegate {
     @objc private func aboutClicked() {
         let alert = NSAlert()
         alert.messageText = "NetSignal"
-        alert.informativeText = "版本 1.0.1\n\n网络状态监测工具\n通过监测国内外主要网站访问速度，直观反映当前网络状态。"
+        alert.informativeText = "版本 1.0.3\n\n网络状态监测工具\n通过监测国内外主要网站访问速度，直观反映当前网络状态。"
         alert.alertStyle = .informational
         alert.icon = appIcon()
         alert.addButton(withTitle: "确定")
@@ -351,9 +353,12 @@ extension StatusBarController {
     private func startMenuCountdown() {
         stopMenuCountdown()
         updateCountdownItem()
-        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        let ticker = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.updateCountdownItem()
         }
+        // 菜单打开期间 RunLoop 处于 eventTracking 模式，必须注册到 .common 才会每秒跳动
+        RunLoop.main.add(ticker, forMode: .common)
+        countdownTimer = ticker
     }
 
     private func stopMenuCountdown() {

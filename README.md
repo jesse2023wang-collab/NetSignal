@@ -1,25 +1,20 @@
 # NetSignal - macOS 网络状态监测工具
 
 <p align="center">
-  <img src="screenshots/菜单栏.png" alt="NetSignal 菜单" width="360">
+  <img src="screenshots/菜单栏页103.png" alt="NetSignal 菜单" width="360">
 </p>
 
 NetSignal 是一款 macOS 菜单栏应用，通过监测国内外主要网站的访问速度，用直观的信号格图标反映当前网络状态。
 
 <p align="center">
-  <img src="screenshots/菜单栏-图标-非彩色.png" alt="非彩色图标" height="50">
-  <img src="screenshots/菜单栏-图标-彩色.png" alt="彩色图标" height="50">
-</p>
-<p align="center"><small>非彩色 / 彩色</small></p>
-
-<p align="center">
-  <img src="screenshots/设置页-自定义网址.png" alt="设置页-自定义网址" width="360">
+  <img src="screenshots/设置页-自定义网址页%20103.png" alt="设置页-自定义网址" width="360">
 </p>
 
 ## 特性
 
 - **信号格显示**：类似手机信号图标，1-4 格直观展示网络好坏
 - **国内外区分**：同时监测国内网站（微博、小红书、京东、淘宝、B站、网易）和海外网站（X、YouTube、Google、Netflix、GitHub）
+- **环境切换**：自动 / 全球 / 仅国内。自动模式会先探测海外可达性，可达按全球检测、不可达按仅国内检测
 - **实时测速**：HEAD 请求测量网站响应时间（DNS + 连接 + 首字节）
 - **自动刷新**：支持自定义刷新间隔（10-300 秒）
 - **自定义网站**：可添加、删除、启用/禁用监测网站
@@ -29,8 +24,12 @@ NetSignal 是一款 macOS 菜单栏应用，通过监测国内外主要网站的
 
 ## 下载安装
 
-- **GitHub Releases**：[v1.0.1 下载](https://github.com/jesse2023wang-ai/NetSignal/releases/tag/v1.0.1)（NetSignal-1.0.1.dmg）
+- **GitHub Releases**：[v1.0.3 下载](https://github.com/jesse2023wang-collab/NetSignal/releases/tag/v1.0.3)（NetSignal-1.0.3.dmg）
 - 下载后打开 `.dmg`，将 NetSignal 拖入 Applications 文件夹即可
+
+## 版本日志
+
+详见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## ⚠️ 首次运行设置
 

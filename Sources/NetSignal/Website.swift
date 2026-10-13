@@ -1,7 +1,6 @@
 import Foundation
 
 extension Notification.Name {
-    static let iconStyleChanged = Notification.Name("iconStyleChanged")
     static let autoRefreshChanged = Notification.Name("autoRefreshChanged")
 }
 
@@ -89,13 +88,15 @@ enum NetworkQuality: Int, CaseIterable {
 }
 
 enum EnvironmentMode: String, Codable, CaseIterable {
-    case domesticOnly = "domesticOnly"
+    case auto = "auto"
     case global = "global"
+    case domesticOnly = "domesticOnly"
 
     var description: String {
         switch self {
-        case .domesticOnly: return "仅国内"
+        case .auto: return "自动"
         case .global: return "全球"
+        case .domesticOnly: return "仅国内"
         }
     }
 }

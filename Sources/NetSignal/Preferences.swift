@@ -11,7 +11,6 @@ class Preferences: ObservableObject {
         static let refreshInterval = "refreshInterval"
         static let launchAtLogin = "launchAtLogin"
         static let environmentMode = "environmentMode"
-        static let useColorfulIcon = "useColorfulIcon"
         static let firstLaunch = "firstLaunch"
     }
 
@@ -39,13 +38,6 @@ class Preferences: ObservableObject {
         didSet { defaults.set(environmentMode.rawValue, forKey: Keys.environmentMode) }
     }
 
-    @Published var useColorfulIcon: Bool {
-        didSet {
-            defaults.set(useColorfulIcon, forKey: Keys.useColorfulIcon)
-            NotificationCenter.default.post(name: .iconStyleChanged, object: nil)
-        }
-    }
-
     private init() {
         if let data = defaults.data(forKey: Keys.websites),
            let saved = try? JSONDecoder().decode([Website].self, from: data),
@@ -63,10 +55,8 @@ class Preferences: ObservableObject {
            let mode = EnvironmentMode(rawValue: modeRaw) {
             self.environmentMode = mode
         } else {
-            self.environmentMode = .global
+            self.environmentMode = .auto
         }
-
-        self.useColorfulIcon = defaults.object(forKey: Keys.useColorfulIcon) as? Bool ?? true
 
         if defaults.object(forKey: Keys.firstLaunch) == nil {
             defaults.set(true, forKey: Keys.firstLaunch)
@@ -75,7 +65,6 @@ class Preferences: ObservableObject {
 
     func resetToDefaults() {
         websites = Website.defaults
-        environmentMode = .global
-        useColorfulIcon = true
+        environmentMode = .auto
     }
 }

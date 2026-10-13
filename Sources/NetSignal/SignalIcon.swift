@@ -1,7 +1,7 @@
 import Cocoa
 
 class SignalIcon {
-    static func generateImage(quality: NetworkQuality, size: NSSize = NSSize(width: 20, height: 20), colorful: Bool = true) -> NSImage {
+    static func generateImage(quality: NetworkQuality, size: NSSize = NSSize(width: 20, height: 20)) -> NSImage {
         let image = NSImage(size: size)
         image.lockFocus()
 
@@ -16,7 +16,7 @@ class SignalIcon {
         let baseY: CGFloat = 3
         let maxBarHeight: CGFloat = size.height - baseY - 2
 
-        let activeColor = colorful ? qualityColor(quality) : NSColor.labelColor
+        let activeColor = NSColor.labelColor
         let inactiveColor = NSColor.separatorColor.withAlphaComponent(0.25)
 
         for i in 0..<barCount {
@@ -35,7 +35,8 @@ class SignalIcon {
         }
 
         image.unlockFocus()
-        image.isTemplate = !colorful
+        // 模板图像：由系统按菜单栏外观着色（浅色黑 / 深色白）
+        image.isTemplate = true
         return image
     }
 
@@ -85,20 +86,5 @@ class SignalIcon {
 
         output.unlockFocus()
         return output
-    }
-
-    private static func qualityColor(_ quality: NetworkQuality) -> NSColor {
-        switch quality {
-        case .noSignal:
-            return NSColor.systemGray
-        case .poor:
-            return NSColor.systemRed
-        case .fair:
-            return NSColor.systemOrange
-        case .good:
-            return NSColor.systemGreen
-        case .excellent:
-            return NSColor.systemGreen.blended(withFraction: 0.3, of: NSColor.systemTeal) ?? NSColor.systemGreen
-        }
     }
 }

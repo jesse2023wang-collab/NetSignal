@@ -4,8 +4,8 @@ import Cocoa
 class UpdateChecker {
     static let shared = UpdateChecker()
 
-    private let currentVersion = "1.0.1"
-    private let checkURL = "https://api.github.com/repos/jesse2023wang-ai/NetSignal/releases/latest"
+    private let currentVersion = "1.0.3"
+    private let checkURL = "https://api.github.com/repos/jesse2023wang-collab/NetSignal/releases/latest"
 
     func checkForUpdate() {
         guard let url = URL(string: checkURL) else { return }
@@ -58,7 +58,7 @@ class UpdateChecker {
 
         let response = alert.runModal()
         if response == .alertFirstButtonReturn {
-            if let url = URL(string: "https://github.com/jesse2023wang-ai/NetSignal/releases/latest") {
+            if let url = URL(string: "https://github.com/jesse2023wang-collab/NetSignal/releases/latest") {
                 NSWorkspace.shared.open(url)
             }
         }
